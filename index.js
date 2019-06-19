@@ -2,7 +2,7 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
-
+const mongoose = require('mongoose')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -32,9 +32,12 @@ app.delete('/api/contracts/:contractId',(req, res) =>{
     
 })
 
-
-
-
-app.listen(port, ()=>{
-    console.log(`Start Simple API Rest App in port: ${port}`)
+mongoose.connect('mongodb://testuser:test123@ds343895.mlab.com:43895/technicaltest',(err,res)=>{
+    if(err) throw err
+    console.log("Conexión establecida con Mongo")
+    app.listen(port, ()=>{
+        console.log(`Start Simple API Rest App in port: ${port}`)
+    })
 })
+
+
