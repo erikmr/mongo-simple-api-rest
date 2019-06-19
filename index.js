@@ -13,12 +13,23 @@ const Contract = require('./models/contract')
 app.use(bodyParser.urlencoded({extended :false}))
 app.use(bodyParser.json())
 
-app.get('/api/contracts',(req, res) =>{
-    res.status(200).send({contracts:[]})
+app.get('/api/contract',(req, res) =>{
+    Contract.find({},(err, contracts)=>{
+        if(err) res.status(500).send({message: `Error al obtener los contratos : ${err}`})
+        if(!contracts) res.status(500).send({message: 'No existen contratos'})
+        res.status(200).send(contracts)
+    })    
 })
 
-app.get('/api/contracts/:contractId',(req, res) =>{
-    
+app.get('/api/contract/:contractId',(req, res) =>{
+    //ID = 5d0a3ee2ada9540b7cad3843
+    let contractId = req.params.contractId
+    //console.log(contractId)
+    Contract.findById(contractId,(err, contract)=>{
+        if(err) res.status(500).send({message: `Error al obtener el contrato : ${err}`})
+        if(!contract) res.status(500).send({message: 'El contrato no existe'})
+        res.status(200).send({contract: contract})
+    })
 })
 
 app.post('/api/contract',(req, res) =>{
@@ -33,7 +44,7 @@ app.post('/api/contract',(req, res) =>{
     contract.category = body.category
 
     contract.save((err,contractStored) =>{
-        if(err) res.status(500).send({message: `Error al salver : ${err}`})
+        if(err) res.status(500).send({message: `Error al guardar el contrato : ${err}`})
         res.status(200).send({contract: contractStored})
     })
 
