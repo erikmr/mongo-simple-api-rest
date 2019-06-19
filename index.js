@@ -50,7 +50,13 @@ app.post('/api/contract',(req, res) =>{
 })
 
 app.put('/api/contract/:contractId',(req, res) =>{
-    
+    let contractId = req.params.contractId
+    let update = req.body
+    Contract.findByIdAndUpdate(contractId,update,(err, contractUpdated)=>{
+        if(err) res.status(500).send({message: `Error al actualizar el contrato : ${err}`})
+        if(!contractUpdated) res.status(500).send({message: 'El contrato no existe'})
+        res.status(200).send({contract: contractUpdated})
+    })
 })
 
 app.delete('/api/contract/:contractId',(req, res) =>{
