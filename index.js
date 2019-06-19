@@ -7,6 +7,9 @@ const mongoose = require('mongoose')
 const app = express()
 const port = process.env.PORT || 3000
 
+const Contract = require('./models/contract')
+
+
 app.use(bodyParser.urlencoded({extended :false}))
 app.use(bodyParser.json())
 
@@ -19,8 +22,21 @@ app.get('/api/contracts/:contractId',(req, res) =>{
 })
 
 app.post('/api/contract',(req, res) =>{
+    console.log('/api/contract')
     console.log(req.body)
-    res.status(200).send({message:'El contrato se ha registrado'})
+    
+    let contract = new Contract()
+    let body = req.body
+    contract.type = body.type
+    contract.contractor = body.contractor
+    contract.premium = body.premium
+    contract.category = body.category
+
+    contract.save((err,contractStored) =>{
+        if(err) res.status(500).send({message: `Error al salver : ${err}`})
+        res.status(200).send({contract: contractStored})
+    })
+
     
 })
 
