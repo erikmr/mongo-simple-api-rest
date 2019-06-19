@@ -22,9 +22,7 @@ app.get('/api/contract',(req, res) =>{
 })
 
 app.get('/api/contract/:contractId',(req, res) =>{
-    //ID = 5d0a3ee2ada9540b7cad3843
     let contractId = req.params.contractId
-    //console.log(contractId)
     Contract.findById(contractId,(err, contract)=>{
         if(err) res.status(500).send({message: `Error al obtener el contrato : ${err}`})
         if(!contract) res.status(500).send({message: 'El contrato no existe'})
@@ -51,12 +49,22 @@ app.post('/api/contract',(req, res) =>{
     
 })
 
-app.put('/api/contracts/:contractId',(req, res) =>{
+app.put('/api/contract/:contractId',(req, res) =>{
     
 })
 
-app.delete('/api/contracts/:contractId',(req, res) =>{
-    
+app.delete('/api/contract/:contractId',(req, res) =>{
+    let contractId = req.params.contractId
+    Contract.findById(contractId,(err, contract)=>{
+        if(err) res.status(500).send({message: `Error al obtener el contrato que se desea borrar: ${err}`})
+        if(!contract) res.status(500).send({message: 'El contrato que se quiere borrar no existe'})
+        
+        contract.remove(err=>{
+            if(err) res.status(500).send({message: `Error intentar borrar: ${err}`})
+            res.status(200).send({message:'el contrato ha sido borrado'})
+        
+        })
+    })
 })
 
 mongoose.connect('mongodb://testuser:test123@ds343895.mlab.com:43895/technicaltest',(err,res)=>{
